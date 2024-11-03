@@ -33,7 +33,9 @@ class $modify(PopupRandomMeme, CCScene) {
                         res->into(path);
                         auto sprite = CCSprite::create(path.string().c_str());
                         //sprite has cached frame so temp file can be deleted.
+#ifndef __APPLE__
                         CCTextureCache::get()->removeTextureForKey(path.string().c_str());
+#endif
                         fs::remove(path, fs::last_err_code);
 
                         auto noElasticity = false;
@@ -145,6 +147,7 @@ class $modify(ModsLayerExt, CCLayer) {
         if (typeinfo_cast<ModsLayer*>(this)) queueInMainThread(
             [this] {
                 auto label = CCLabelBMFont::create("get random programming meme", "gjFont41.fnt");
+                label->setID("label"_spr);
                 label->setScale(0.3f);
                 label->setBlendFunc({ GL_ONE, GL_ONE });
                 auto menu = CCMenu::createWithItem(CCMenuItemExt::createSpriteExtra(
@@ -162,6 +165,7 @@ class $modify(ModsLayerExt, CCLayer) {
                         if (menu) menu->setPositionY(SETTING(double, "Button Position Y"));
                     }
                 )));
+                menu->setID("menu"_spr);
                 this->addChild(menu);
             }
         );

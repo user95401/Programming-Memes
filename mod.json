@@ -9,10 +9,10 @@
 	"early-load": true,
 	"id": "user95401.programming_memes",
 	"name": "A* Programming_Memes;",
-	"version": "v1.0.0-beta.1",
+	"version": "v1.0.0-beta.2",
 	"developer": "user95401",
 	"description": "get image memes in game",
-	"tags": [ "joke", "online", "content", "interface" ],
+	"tags": [ "developer", "joke", "online", "content", "interface" ],
 	"links": {
 		"community": "https://discord.gg/6SxAbk3bTA",
 		"homepage": "https://t.me/user95401_channel",
@@ -45,5 +45,12 @@
 			"max": 500,
 			"default": 10.0
 		}
-	}
+	},
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"version": ">=v1.13.1",
+			"importance": "required"
+		}
+	]
 }
