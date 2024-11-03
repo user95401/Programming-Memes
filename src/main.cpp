@@ -98,7 +98,7 @@ class $modify(PopupRandomMeme, CCScene) {
                     matjson::Value rand_meme = *select_randomly(the_memes_list.begin(), the_memes_list.end());
                     auto image = rand_meme.try_get<std::string>("image").value_or("no meme?(");
                     while (images_history.contains(image)) {
-                        log::warn("skippnig meme. {}", image);
+                        //log::warn("skippnig meme. {}", image);
                         goto get_rand;
                     }
                     images_history.insert(image);
