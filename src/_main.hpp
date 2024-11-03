@@ -131,7 +131,7 @@ namespace geode::cocos {
         if (!node) log::warn("FAILED TO FIND DATA NODE! id: {}", id);
         return node;
     }
-    class CCLambdaAction : public CCActionInterval {
+    class CCLambdaAction : public CCCallFunc {
     public:
         std::function<void()> m_callback;
         CCLambdaAction() {};
@@ -139,7 +139,7 @@ namespace geode::cocos {
         void update(float time) override {
             m_callback();
         };
-        static CCLambdaAction* create(std::function<void()>&& callback) {
+        static CCLambdaAction* createMe(std::function<void()>&& callback) {
             auto ret = new (std::nothrow) CCLambdaAction();
             if (ret) {
                 ret->m_callback = std::forward<std::remove_reference_t<decltype(callback)>>(callback);
@@ -148,6 +148,11 @@ namespace geode::cocos {
             }
             delete ret;
             return nullptr;
+        };
+        static auto create(std::function<void()>&& callback) {
+            return CCSpawn::create(CCLambdaAction::createMe(
+                std::forward<std::remove_reference_t<decltype(callback)>>(callback)
+            ), nullptr);
         };
     };
     void setTouchPriority(CCNode* node, int priority) {
