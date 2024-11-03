@@ -131,17 +131,24 @@ namespace geode::cocos {
         if (!node) log::warn("FAILED TO FIND DATA NODE! id: {}", id);
         return node;
     }
-    class CCLambdaAction : public CCCallFunc {
+    //add this child to some node. node->addChild(LambdaNode::createToCallOnce([]() {}));
+    class LambdaNode : public CCSprite {
     public:
         std::function<void()> m_callback;
-        CCLambdaAction() {};
-        ~CCLambdaAction() {};
-        void update(float time) override {
+        unsigned int repeat = 0;
+        bool endless = false;
+        LambdaNode() {};
+        ~LambdaNode() {};
+        void exec(float) {
+            //log::error("{}->{}", this, __FUNCTION__);
+            if (this->getParent() == nullptr) return;
             m_callback();
+            if (!endless and (repeat <= 0)) this->removeFromParent();
+            repeat -= 1;
         };
-        static CCLambdaAction* createMe(std::function<void()>&& callback) {
-            auto ret = new (std::nothrow) CCLambdaAction();
-            if (ret) {
+        static LambdaNode* create(std::function<void()>&& callback) {
+            auto ret = new (std::nothrow) LambdaNode();
+            if (ret and ret->init()) {
                 ret->m_callback = std::forward<std::remove_reference_t<decltype(callback)>>(callback);
                 ret->autorelease();
                 return ret;
@@ -149,10 +156,21 @@ namespace geode::cocos {
             delete ret;
             return nullptr;
         };
-        static auto create(std::function<void()>&& callback) {
-            return CCSpawn::create(CCLambdaAction::createMe(
+        static auto createToCallOnce(std::function<void()>&& callback, float delay = 0.f) {
+            auto rtn = LambdaNode::create(
                 std::forward<std::remove_reference_t<decltype(callback)>>(callback)
-            ), nullptr);
+            );
+            rtn->scheduleOnce(schedule_selector(LambdaNode::exec), delay);
+            return rtn;
+        };
+        static auto createWithSchedule(std::function<void()>&& callback, float interval = 0.f, unsigned int repeat = kCCRepeatForever, float delay = 0.f) {
+            auto rtn = LambdaNode::create(
+                std::forward<std::remove_reference_t<decltype(callback)>>(callback)
+            );
+            rtn->repeat = repeat;
+            rtn->endless = repeat == kCCRepeatForever;
+            rtn->schedule(schedule_selector(LambdaNode::exec), interval, repeat, delay);
+            return rtn;
         };
     };
     void setTouchPriority(CCNode* node, int priority) {
