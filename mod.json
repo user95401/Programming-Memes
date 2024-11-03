@@ -1,0 +1,49 @@
+{
+	"geode": "3.9.0",
+	"gd": {
+		"win": "2.206",
+		"android": "2.206",
+		"mac": "2.206",
+		"ios": "2.206"
+	},
+	"early-load": true,
+	"id": "user95401.programming_memes",
+	"name": "A* Programming_Memes;",
+	"version": "v1.0.0-beta.1",
+	"developer": "user95401",
+	"description": "get image memes in game",
+	"tags": [ "joke", "online", "content", "interface" ],
+	"links": {
+		"community": "https://discord.gg/6SxAbk3bTA",
+		"homepage": "https://t.me/user95401_channel",
+		"source": "https://github.com/user95401/Programming-Memes"
+	},
+	"settings": {
+		"Show After Loading": {
+			"name": "Show After Loading",
+			"description": "Popup random meme after game loading",
+			"type": "bool",
+			"default": true
+		},
+		"Add Button": {
+			"name": "Add Button",
+			"description": "Add open up button in geode mods list layer",
+			"type": "bool",
+			"default": true
+		},
+		"Button Position X": {
+			"name": "Button Position X",
+			"type": "float",
+			"min": -100,
+			"max": 1000,
+			"default": 160.0
+		},
+		"Button Position Y": {
+			"name": "Button Position Y",
+			"type": "float",
+			"min": -100,
+			"max": 500,
+			"default": 10.0
+		}
+	}
+}
