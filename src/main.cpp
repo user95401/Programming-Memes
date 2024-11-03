@@ -73,7 +73,7 @@ class $modify(PopupRandomMeme, CCScene) {
                         indicators->setPositionY(6.f);
                         indicators->setContentWidth(boomscroll->getContentWidth());
                         indicators->setLayout(RowLayout::create());
-                        indicators->addChild(LambdaNode::createWithSchedule(
+                        indicators->addChild(LambdaNode::createToEndlessCalls(
                             [indicators]() {
                                 if (indicators) indicators->updateLayout();
                             }
@@ -159,7 +159,7 @@ class $modify(ModsLayerExt, CCLayer) {
                         if (openup) openup->activate();
                     }
                 ));
-                menu->addChild(LambdaNode::createWithSchedule(
+                menu->addChild(LambdaNode::createToEndlessCalls(
                     [menu]() {
                         if (menu) menu->setPositionX(SETTING(double, "Button Position X"));
                         if (menu) menu->setPositionY(SETTING(double, "Button Position Y"));

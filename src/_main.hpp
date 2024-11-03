@@ -135,16 +135,14 @@ namespace geode::cocos {
     class LambdaNode : public CCSprite {
     public:
         std::function<void()> m_callback;
-        unsigned int repeat = 0;
         bool endless = false;
         LambdaNode() {};
         ~LambdaNode() {};
         void exec(float) {
             //log::error("{}->{}", this, __FUNCTION__);
             if (this->getParent() == nullptr) return;
+            if (!endless) this->removeFromParent();
             m_callback();
-            if (!endless and (repeat <= 0)) this->removeFromParent();
-            repeat -= 1;
         };
         static LambdaNode* create(std::function<void()>&& callback) {
             auto ret = new (std::nothrow) LambdaNode();
@@ -163,13 +161,12 @@ namespace geode::cocos {
             rtn->scheduleOnce(schedule_selector(LambdaNode::exec), delay);
             return rtn;
         };
-        static auto createWithSchedule(std::function<void()>&& callback, float interval = 0.f, unsigned int repeat = kCCRepeatForever, float delay = 0.f) {
+        static auto createToEndlessCalls(std::function<void()>&& callback, float interval = 0.f) {
             auto rtn = LambdaNode::create(
                 std::forward<std::remove_reference_t<decltype(callback)>>(callback)
             );
-            rtn->repeat = repeat;
-            rtn->endless = repeat == kCCRepeatForever;
-            rtn->schedule(schedule_selector(LambdaNode::exec), interval, repeat, delay);
+            rtn->endless = 1;
+            rtn->schedule(schedule_selector(LambdaNode::exec), interval);
             return rtn;
         };
     };
