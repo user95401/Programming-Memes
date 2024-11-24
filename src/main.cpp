@@ -1,4 +1,5 @@
 ﻿#include <_main.hpp>
+#include <_updater.hpp>
 #include <Geode/utils/web.hpp>
 
 //popup logic and on game loaded showup
@@ -69,7 +70,7 @@ class $modify(PopupRandomMeme, CCScene) {
                         layers_history->insertObject(layer, 0);
 
                         auto boomscroll = BoomScrollLayer::create(layers_history, 0, 0);
-                        auto indicators = getChildOfType<CCSpriteBatchNode>(boomscroll, 0);
+                        auto indicators = boomscroll->getChildByType<CCSpriteBatchNode>(0);
                         indicators->setPositionY(6.f);
                         indicators->setContentWidth(boomscroll->getContentWidth());
                         indicators->setLayout(RowLayout::create());
@@ -85,18 +86,18 @@ class $modify(PopupRandomMeme, CCScene) {
                     }
 
                     auto json = res->json();
-                    auto value = matjson::Value(json.value_or(json.error_or("unk err")));
+                    auto value = matjson::Value(json.unwrapOrDefault());
                     //log::info("{}", value);
 
-                    if (json.has_error()) return;
-                    if (value.is_array() == false) return;
-                    //log::info("{}", "as_array");
+                    if (json.isErr()) return;
+                    if (value.isArray() == false) return;
+                    //log::info("{}", "asArray");
                     //log::info("value {}", value);
-                    auto the_memes_list = value.as_array();
+                    auto the_memes_list = value.asArray().unwrap();
                     //get random meme from list and skip used ones
                     get_rand:
                     matjson::Value rand_meme = *select_randomly(the_memes_list.begin(), the_memes_list.end());
-                    auto image = rand_meme.try_get<std::string>("image").value_or("no meme?(");
+                    auto image = rand_meme["image"].asString().unwrapOr("no meme?(");
                     while (images_history.contains(image)) {
                         //log::warn("skippnig meme. {}", image);
                         goto get_rand;
